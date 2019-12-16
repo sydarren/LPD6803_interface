@@ -2,3 +2,4 @@
   - C code I made for driving the LPD6803 LED strips.
   - Software utilizes GPIO pins to evoke Serial data transfer. 
   - Software was made to be interfaced to an NXP LPC175x microcontroller. 
+  - The interface is more "object oriented" for the ease of the user implementation
