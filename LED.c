@@ -1,4 +1,4 @@
-#include "igs_app.h"
+#include "igs_app.h" // remove this include statement and add the necessary MCU protocol of your chosen device
 
 /*
 * Custom Interface code for LPD6803 LED strips
