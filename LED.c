@@ -1,8 +1,11 @@
-#include "igs_app.h" // remove this include statement and add the necessary MCU protocol of your chosen device
+#include "igs_app.h" // include function is used only to interface into the LPC175x chip
+
 
 /*
+* Description: 
 * Custom Interface code for LPD6803 LED strips
 * LED Data array holds the (1,0) data to be pulsed out with [15] being the MSB
+* Red, Green, and Blue variables alters its corresponding color (5 bit value)
 */
 typedef struct LED_cell{
 	
@@ -16,7 +19,11 @@ typedef struct LED_cell{
 
 void updateData(LED_param* LED);
 
-// Constructor function
+/*
+* Constructor function
+* Used to initiate the individual cell 
+* @param: LED_param * is the address of an individual LED cell
+*/
 void LED_init(LED_param* LED)
 {
 	int16_t i;
@@ -28,7 +35,11 @@ void LED_init(LED_param* LED)
 	updateData(LED);
 }
 
-// pass the data array
+/*pass the data array
+* Function invokes the GPIO pins of the MCU to pulse out the corresponding data 
+* and clock pulses necessary.
+* @param: Passes in the entire Data array to be cycled and printed out
+*/
 void TransmitData(uint8_t* Data)
 {
 	int16_t i;
@@ -40,6 +51,10 @@ void TransmitData(uint8_t* Data)
 	}
 }
 
+/*
+* This function invokes the GPIO pins to transmit the start signal
+* for the LED strip to indicate that it's start
+*/
 void TransmitStart (void)
 {
 	int16_t i;
@@ -56,6 +71,11 @@ void TransmitStart (void)
 	
 }
 
+/*
+* This function invokes the GPIO pins to transmit the end signal
+* for the LED strip to indicate that it's end
+* @param: Pass the number of LED cells (1 cell == 3 LEDs) used 
+*/
 void TransmitEnd (uint8_t nCells) // number of LED cells
 {
 	int16_t i;
@@ -72,8 +92,11 @@ void TransmitEnd (uint8_t nCells) // number of LED cells
 	
 }
 
-// Refreshes the data in the LED data cell array
-// use if changes are made
+/*
+*	Function refreshes the data in the LED data cell array. 
+*	@param: Pass the individual LED cell object and translates whatever
+* value found in Red, Green, Blue variables into corresponding Serial data
+*/
 void updateData(LED_param* LED)
 {
 	uint8_t i, R, G, B;
@@ -109,7 +132,7 @@ void updateData(LED_param* LED)
 
 /*
 * Combines all tramsmission functions into one
-*	Pass the entire LED cell array the number of Cells
+*	Pass the entire LED cell array and the number of Cells
 */
 void TransmitAll(LED_param LED[], uint8_t nCells)
 {
@@ -129,6 +152,8 @@ void TransmitAll(LED_param LED[], uint8_t nCells)
 /* 
 *	Edit all the colors passing an integer value of 0-31 and the LED cell to be changed
 *	Updates the data array ofthe corresponding LED cell.
+* @param: Pass in the individual LED cell, and the individual RGB intensity values chosen. 
+* Function updateData is called to update the corresponding Data array. 
 */
 void setColor(LED_param* LED, uint16_t red, uint16_t green, uint16_t blue)
 {
@@ -141,7 +166,7 @@ void setColor(LED_param* LED, uint16_t red, uint16_t green, uint16_t blue)
 
 /*
 * Updates the ENTIRE data array of the passed LED cell
-*	@ param LED_param the single cell typedef 
+*	@param LED_param the single cell typedef 
 *		Color code - 5 bit color data
 */
 void setData(LED_param* LED, uint16_t ColorCode)
